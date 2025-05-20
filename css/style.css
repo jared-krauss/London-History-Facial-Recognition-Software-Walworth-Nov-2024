@@ -79,3 +79,30 @@ button:hover {
     z-index: 10;
     font-size: 16px;
 }
+/* Add these to your existing style.css */
+
+/* Prevent touch actions from scrolling the page on mobile */
+#viewer {
+    touch-action: none;
+}
+
+/* Optimize for performance */
+canvas {
+    image-rendering: high-quality;
+    will-change: transform;
+}
+
+/* Better loading indicator */
+#loading {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 15px 25px;
+    border-radius: 8px;
+    z-index: 10;
+    font-size: 16px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+}
