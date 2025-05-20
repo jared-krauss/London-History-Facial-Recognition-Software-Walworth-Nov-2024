@@ -1,30 +1,53 @@
 document.addEventListener('DOMContentLoaded', function() {
-    // Configuration
-    const modelPath = 'models/walworth-nov-2024.splat'; // Changed extension to .splat
-    const viewerElement = document.getElementById('viewer');
-    
-    // Initialize GSplat viewer
-    const viewer = new GSplat.Viewer({
-        canvas: viewerElement,
-        background: [0.1, 0.1, 0.1, 1.0],
-        cameraTarget: [0, 0, 0],
-        cameraDistance: 2.0,
-        useProgressiveRendering: true, // Enable progressive rendering for better performance
-        splatSize: 1.0 // Can be adjusted based on your specific model
-    });
-    
-    // Loading indicator (optional but recommended)
+    // Create loading indicator
     const loadingElement = document.createElement('div');
     loadingElement.id = 'loading';
-    loadingElement.innerHTML = 'Loading 3D Model...';
+    loadingElement.innerHTML = 'Loading 3D Model... 0%';
     document.getElementById('container').appendChild(loadingElement);
     
-    // Load the Gaussian Splat model
+    // Get the container element
+    const viewerElement = document.getElementById('viewer');
+    
+    // Path to your .splat file
+    const modelPath = 'models/walworth-nov-2024.splat';
+    
+    // Initialize the Antimatter Splat Viewer
+    const viewer = new SplatViewer({
+        // Container to render into
+        canvas: viewerElement,
+        
+        // Camera settings
+        camera: {
+            // Initial position (adjust these coordinates based on your scene)
+            position: [0, 0, 3],
+            // Where the camera is looking (usually center of your scene)
+            target: [0, 0, 0]
+        },
+        
+        // Rendering quality settings
+        renderOptions: {
+            // Higher = better quality but slower performance
+            pointSize: 1.0,
+            // Progressive rendering for smoother interaction
+            progressive: true
+        },
+        
+        // Background color (RGBA format, values from 0-1)
+        backgroundColor: [0.1, 0.1, 0.1, 1.0]
+    });
+    
+    // Track loading progress
+    let lastPercent = 0;
+    
+    // Load the .splat file
     viewer.loadFile(modelPath, {
-        // You can specify a progress callback
         onProgress: (progress) => {
             const percent = Math.round(progress * 100);
-            loadingElement.innerHTML = `Loading 3D Model... ${percent}%`;
+            // Only update if percentage changed to avoid excessive DOM updates
+            if (percent !== lastPercent) {
+                loadingElement.innerHTML = `Loading 3D Model... ${percent}%`;
+                lastPercent = percent;
+            }
         }
     }).then(() => {
         console.log('Model loaded successfully');
@@ -34,6 +57,21 @@ document.addEventListener('DOMContentLoaded', function() {
         loadingElement.innerHTML = 'Error loading model. Please try again.';
     });
     
-    // Rest of the script remains the same
-    // ...
+    // Handle controls
+    document.getElementById('reset-camera').addEventListener('click', function() {
+        viewer.resetCamera();
+    });
+    
+    document.getElementById('fullscreen').addEventListener('click', function() {
+        if (!document.fullscreenElement) {
+            document.documentElement.requestFullscreen();
+        } else {
+            document.exitFullscreen();
+        }
+    });
+    
+    // Handle window resize
+    window.addEventListener('resize', function() {
+        viewer.resize();
+    });
 });
