@@ -9,7 +9,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const viewerElement = document.getElementById('viewer');
     
     // Path to your .splat file
-    const modelPath = 'models/walworth-nov-2024.splat';
+    const modelPath = 'T18-30-1-Spatial-Vocab-New-Masks_8000iters.splat';
     
     // Initialize the Antimatter Splat Viewer
     const viewer = new SplatViewer({
